@@ -16,30 +16,41 @@ const saveFormState = () => {
 
 const restoreFormState = () => {
   const savedData = localStorage.getItem(STORAGE_KEY);
+  let formData;
+
   if (savedData) {
-    const formData = JSON.parse(savedData);
-    emailInput.value = formData.email;
-    messageInput.value = formData.message;
+    formData = JSON.parse(savedData);
+  } else {
+    formData = { email: '', message: '' };
   }
+
+  emailInput.value = formData.email;
+  messageInput.value = formData.message;
 };
 
-const clearFormState = () => {
+function clearFormState() {
   localStorage.removeItem(STORAGE_KEY);
   emailInput.value = '';
   messageInput.value = '';
-};
+}
 
 const throttledSaveFormState = throttle(saveFormState, 500);
 
-form.addEventListener('input', throttledSaveFormState);
-
-form.addEventListener('submit', (e) => {
+const handleSubmit = (e) => {
   e.preventDefault();
-  console.log('Form submitted:', {
-    email: emailInput.value,
-    message: messageInput.value,
-  });
-  clearFormState();
-});
 
+  const emailValue = emailInput.value;
+  const messageValue = messageInput.value;
+
+  if (emailValue && messageValue) {
+    console.log('Form submitted:', { email: emailValue, message: messageValue });
+    clearFormState();
+  } else {
+    alert('Fill in all the fields');
+  }
+};
+
+form.addEventListener('input', throttledSaveFormState);
+form.addEventListener('submit', handleSubmit);
 document.addEventListener('DOMContentLoaded', restoreFormState);
+

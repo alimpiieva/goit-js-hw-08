@@ -27,24 +27,3 @@ galleryList.insertAdjacentHTML('beforeend', createGalleryMarkup(galleryItems));
 
 const gallery = new SimpleLightbox('.gallery a');
 
-gallery.on('show.simplelightbox', e => {
-  e.preventDefault();
-
-  const largeImageURL = e.target.dataset.source;
-
-  const instance = SimpleLightbox.create(`<img src="${largeImageURL}">`, {
-    onClose: () => {
-      document.removeEventListener('keydown', onModalKeyDown);
-    }
-  });
-
-  instance.show();
-
-  const onModalKeyDown = e => {
-    if (e.key === 'Escape' && instance) {
-      instance.close();
-    }
-  };
-
-  document.addEventListener('keydown', onModalKeyDown);
-});
